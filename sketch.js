@@ -21,6 +21,15 @@ class Ant {
       this.x -= 10;
       image(left, this.x, this.y, 50, 50);
     }
+    if (
+      this.x <= width / 2 - 400 ||
+      this.x >= width / 2 + 400 ||
+      this.y <= 2550 ||
+      this.y >= 2850
+    ) {
+      this.x = width / 2;
+      this.y = 2700;
+    }
   }
 
   specialCase() {
@@ -40,6 +49,15 @@ class Ant {
       this.x -= 10;
       image(left, this.x, this.y, 50, 50);
     }
+    if (
+      this.x <= width / 2 - 400 ||
+      this.x >= width / 2 + 400 ||
+      this.y <= 4475 ||
+      this.y >= 4775
+    ) {
+      this.x = width / 2;
+      this.y = 4625;
+    }
   }
 }
 
@@ -50,17 +68,41 @@ function preload() {
   down = loadImage("ant down.png");
   bg = loadImage("grass field.png");
   meme = loadImage("zoro.jpg");
-  headbg = loadImage("head.jpg");
+  GCase = loadImage("case umum.png");
+  SCase = loadImage("case khusus.png");
+  hbg = loadImage("head.jpg");
+  GCode = loadImage("code pure.png");
+  SCode = loadImage("code special.png");
 }
 
 function setup() {
-  frameRate(5);
-  createCanvas(windowWidth, 3600);
-  ant1 = new Ant(0, 0);
-  a = createInput();
-  a.position(50, 960);
-  a.changed(GeneralDist);
-  GeneralDist();
+  createCanvas(windowWidth, 6000);
+  ant1 = new Ant(width / 2, 2700);
+  ant2 = new Ant(width / 2, 4625);
+  a = createInput("");
+  a.position(225, 910);
+
+  b = createInput();
+  b.position(225, 970);
+
+  let P1 = createButton("Pause");
+  P1.position(width / 2 + 350, 1080);
+  P1.mousePressed(PL);
+
+  let C2 = createButton("Play");
+  C2.position(300, 2475);
+  C2.mousePressed(CL);
+
+  let P3 = createButton("Pause");
+  P3.position(width / 2 + 350, 3055);
+  P3.mousePressed(PL);
+
+  let C4 = createButton("Play");
+  C4.position(300, 4450);
+  C4.mousePressed(CL);
+
+  PL();
+  CL();
 }
 
 function windowResized() {
@@ -68,130 +110,127 @@ function windowResized() {
 }
 
 function draw() {
-  background("#e5cfab");
+  background("black");
+
   head();
   LatarBelakang();
   Definisi();
-  RumusanMasalah();
-  Tujuan();
 
-  fill("#2c6d93");
-  rect(30, 930, width / 2 - 60, 125);
+  textSize(20);
   fill("white");
-  text("Masukkan jumlah percobaan yang ingin dilakukan: ", 50, 950);
-  //GeneralDist();
 
-  text("rata-rata jarak adalah: " + GeneralDist(), 50, 1000);
-  // image(bg, 0, 0, width, height);
-  // translate(width / 2, height / 2);
-  // ant1.movement_step();
+  GeneralPart();
+  SpecialPart();
+
+  fill("white");
+  text("Masukkan jumlah percobaan yang ingin dilakukan: ", 225, 900);
+  text("Masukkan jumlah langkah yang ingin ditempuh: ", 225, 960);
+
+  frameRate(6);
+  ant1.generalCase();
+  ant2.specialCase();
+
+  Kesimpulan();
+  DaPus();
 }
 
 function head() {
   fill("#503417");
-  rect(0, 0, width, 370);
-  textSize(30);
+  imageMode(CENTER);
+  image(hbg, width / 2, 185, width, 370);
+  textSize(25);
   textAlign(CENTER);
   fill("white");
   textStyle(BOLD);
-  text("RANDOM WALK", width / 2, 40);
+  text("SIMULASI RANDOM WALK", width / 2, 70);
   textStyle(NORMAL);
-  textSize(25);
+  textSize(20);
   textAlign(LEFT);
-  let a = 100;
-  let b = 50;
-  text("Anggota Kelompok :", b, a);
-  text("121160003 - Putri Sari", b, a + 40);
-  text("121160028 - Yolanda Sari ", b, a + 80);
-  text("121160042 - Meliana Debora", b, a + 120);
-  text("121160048 - Tonny Putra Yoga", b, a + 160);
-  text("121160055 - Vino Deltayana", b, a + 200);
-  text("121160071 - Nadia Marchela L.Tobing", b, a + 240);
-  imageMode(CENTER);
-  image(meme, width * 0.75, 205, 500, 250);
+  let a = 150; //150 first gud
+  let b = 180;
+  textAlign(CENTER);
+  text("Putri Sari", a, b);
+  text("121160003", a, b + 40);
+  text("Yolanda Sari", a + 160, b);
+  text("121160028", a + 160, b + 40);
+  text("Meliana Debora", a + 350, b);
+  text("121160042", a + 350, b + 40);
+  text("Tonny Putra Yoga", a + 555, b);
+  text("121160048", a + 555, b + 40);
+  text("Vino Deltayana", a + 745, b);
+  text("121160055", a + 745, b + 40);
+  text("Nadia Marchela L.Tobing", a + 975, b);
+  text("121160071", a + 975, b + 40);
+  textAlign(LEFT);
 }
 
 function LatarBelakang() {
-  fill("#2c6d93");
-  rect(30, 400, width / 2 - 60, 250);
-  textSize(25);
-  textAlign(CENTER);
   fill("white");
-  text("Latar Belakang", width * 0.25, 435);
   textAlign(LEFT);
   textSize(20);
-  let a = 60;
-  text("Dalam matematika, Random Walk adalah proses acak yang ", a + 25, 475);
-  text("menggambarkan jalur yang terdiri dari rangkaian langkah acak", a, 500);
-  text("pada beberapa ruang matematika.", a, 525);
-  text("Random Walk memiliki aplikasi untuk teknik dan banyak", a + 25, 575);
+  let a = 225;
+  x = 425;
+  text("Dalam matematika, Random Walk adalah proses acak ", a + 25, x);
+  text("yang menggambarkan jalur yang terdiri dari rangkaian ", a, x + 25);
+  text("langkah acak pada beberapa ruang matematika.", a, x + 50);
+
+  //paragraf 2
   text(
-    "bidang ilmiah termasuk ekologi, psikologi, ilmu komputer, fisika,",
-    a,
-    600
+    "Random Walk memiliki aplikasi untuk teknik dan banyak",
+    a + 25,
+    x + 100
   );
-  text("kimia, biologi, ekonomi, dan sosiologi.", a, 625);
+  text(
+    "bidang ilmiah termasuk ekologi, psikologi, ilmu komputer, ",
+    a,
+    x + 125
+  );
+  text("fisika, kimia, biologi, ekonomi, dan sosiologi.", a, x + 150);
+  imageMode(CENTER);
+  image(meme, width * 0.7, x + 70, 350, 225);
 }
 
 function Definisi() {
-  fill("#28bbb8");
-  rect(width / 2 + 30, 400, width / 2 - 60, 275);
-  textSize(25);
   textAlign(CENTER);
   fill("white");
-  text("Definisi", width * 0.75, 435);
   textAlign(LEFT);
   textSize(20);
-  let a = width / 2 + 50;
-  text("Jalan acak mengacu pada gerakan yang tampaknya acak dari", a + 25, 475);
-  text("suatu kesatuan.", a, 500);
+  let a = 225;
+  x = 650;
   text(
-    "Jenis simulasi komputer tertentu yang melibatkan kisi-kisi",
+    "Jalan acak, dalam teori probabilitas, adalah sebuah proses untuk menentukan kemungkinan lokasi ",
     a + 25,
-    550
+    x
   );
-  text("adalah otomata seluler", a, 575);
   text(
-    "Otomata seluler adalah model komputasi dinamis yang terpisah",
-    a + 25,
-    625
+    "suatu titik pada gerakan acak, mengingat probabilitas (sama pada setiap langkah) untuk bergerak agak ",
+    a,
+    x + 25
   );
-  text("ruang, keadaan, dan waktu.", a, 650);
+  text("jauh ke beberapa arah", a, x + 50);
+
+  //paragraf 2
+  text(
+    "Jalan acak adalah contoh proses Markov, di mana perilaku masa depan tidak bergantung pada ",
+    a + 25,
+    x + 100
+  );
+  text(
+    "kondisi sebelumnya. Contoh tipikal adalah jalan pemabuk, di mana sebuah titik yang dimulai pada ",
+    a,
+    x + 125
+  );
+  text(
+    "titik awal bidang Euclidean bergerak sejauh satu unit untuk setiap unit waktu, namun arah gerakannya ",
+    a,
+    x + 150
+  );
+  text("acak pada setiap langkah. ", a, x + 175);
 }
 
-function RumusanMasalah() {
-  fill("#28bbb8");
-  rect(30, 725, width / 2 - 60, 165);
-  textSize(25);
-  textAlign(CENTER);
-  fill("white");
-  text("Rumusan Masalah", width * 0.25, 760);
-  textAlign(LEFT);
-  textSize(20);
-  let a = 60;
-  text("1. Bagaimanakah gambaran dari random walk secara umum? ", a, 800);
-  text("2. Bagaimana jika ada peluang berbeda untuk setiap arah", a, 840);
-  text(" geraknya? (kasus khusus)", a + 20, 865);
-}
-
-function Tujuan() {
-  fill("#2c6d93");
-  rect(width / 2 + 30, 725, width / 2 - 60, 125);
-  textSize(25);
-  textAlign(CENTER);
-  fill("white");
-  text("Tujuan", width * 0.75, 760);
-  textAlign(LEFT);
-  textSize(20);
-  let a = width / 2 + 50;
-  text("Mensimulasikan dan menvisualisasikan random walk secara", a + 25, 800);
-  text("umum dan dengan kasus khusus.", a, 825);
-}
-
-function GeneralDist() {
-  frameRate(60);
-  const numTest = a.value();
-  step = 50;
+function GeneralPart() {
+  numTest = a.value();
+  step = b.value();
   x0 = 0;
   y0 = 0;
   sumDist = 0;
@@ -212,6 +251,193 @@ function GeneralDist() {
     }
     sumDist = sumDist + Math.sqrt((x - x0) ** 2 + (y - y0) ** 2);
   }
-  avgDist = sumDist / numTest;
-  return avgDist;
+  avgDistG = sumDist / numTest;
+  textSize(25);
+  textStyle(BOLD);
+  textAlign(CENTER);
+  text("Random Walk Secara Umum", width / 2, 1050);
+  textAlign(LEFT);
+  textStyle(NORMAL);
+
+  textSize(20);
+
+  text("Gambar disamping merupakan salah satu", width / 2 + 50, 2125);
+  text("contoh dari jalur pergerakan random walk", width / 2 + 50, 2150);
+  text("secara umum, dengan ketentuan gerak ", width / 2 + 50, 2175);
+  text("sebanyak 50 langkah", width / 2 + 50, 2200);
+
+  //paragraf 2
+  text("Peluang arah gerak ", width / 2 + 50, 2300);
+  text("Utara = 25% ", width / 2 + 50, 2325);
+  text("Selatan = 25%", width / 2 + 50, 2350);
+  text("Timut = 25%", width / 2 + 50, 2375);
+  text("Barat = 25%", width / 2 + 50, 2400);
+
+  rect(225, 2070, 470, 375);
+  image(GCase, width * 0.33, 2255, 400, 350);
+  image(bg, width / 2, 2700, 800, 380);
+  image(GCode, width / 2, 1575, 700, 900);
+  text("Rata-rata jarak untuk kasus umum: " + avgDistG, 225, 1095);
+  text(
+    "Pada contoh visualisasi random walk diatas, dapat dilihat bahwa pergerakan semut sangat acak ",
+    250,
+    2925
+  );
+  text(
+    "dan tidak bisa diprediksi geraknya. Semut tersebut terlihat cenderung berputar-putar. ",
+    225,
+    2950
+  );
+}
+
+function SpecialPart() {
+  numTest = a.value();
+  step = b.value();
+  x0 = 0;
+  y0 = 0;
+  sumDist = 0;
+  for (let i = 0; i < numTest; i++) {
+    x = x0;
+    y = y0;
+    for (let j = 0; j < step; j++) {
+      var choice = int(random(100));
+      if (choice >= 0 && choice < 20) {
+        this.y -= 1;
+      } else if (choice >= 20 && choice < 50) {
+        this.y += 1;
+      } else if (choice >= 50 && choice < 95) {
+        this.x += 1;
+      } else {
+        this.x -= 1;
+      }
+    }
+    sumDist = sumDist + Math.sqrt((x - x0) ** 2 + (y - y0) ** 2);
+  }
+  avgDistS = sumDist / numTest;
+  textSize(25);
+  textStyle(BOLD);
+  textAlign(CENTER);
+  text("Random Walk Secara Khusus", width / 2, 3025);
+  textAlign(LEFT);
+  textStyle(NORMAL);
+
+  textSize(20);
+
+  text("Gambar disamping merupakan salah satu", width / 2 + 50, 4105);
+  text("contoh dari jalur pergerakan random walk", width / 2 + 50, 4130);
+  text("secara khusus, dengan ketentuan gerak ", width / 2 + 50, 4155);
+  text("sebanyak 50 langkah", width / 2 + 50, 4180);
+
+  //paragraf 2
+  text("Peluang arah gerak ", width / 2 + 50, 4280);
+  text("Utara = 20% ", width / 2 + 50, 4305);
+  text("Selatan = 30%", width / 2 + 50, 4330);
+  text("Timut = 45%", width / 2 + 50, 4355);
+  text("Barat = 5%", width / 2 + 50, 4380);
+
+  rect(225, 4050, 470, 375);
+  image(SCase, width * 0.33, 4240, 400, 350);
+  image(bg, width * 0.5, 4675, 800, 375);
+  image(SCode, width / 2, 3550, 700, 900);
+  text("Rata-rata jarak untuk kasus khusus: " + avgDistS, 225, 3070);
+  text(
+    "Pada contoh visualisasi random walk diatas, dapat dilihat bahwa pergerakan semut cukup acak ",
+    250,
+    4900
+  );
+  text(
+    "namun masih bisa dilihat bahwa semut masih cenderung bergerak ke kanan. ",
+    225,
+    4925
+  );
+}
+
+function Kesimpulan() {
+  textSize(25);
+  textStyle(BOLD);
+  textAlign(CENTER);
+  text("Kesimpulan ", width / 2, 5000);
+  textAlign(LEFT);
+  textStyle(NORMAL);
+
+  textSize(20);
+  //Poin
+  text(
+    "1. Random Walk secara umum lebih susah ditebak arah pergerakannya, dan juga rata-rata jarak",
+    225,
+    5040
+  );
+  text("tempuhnya lebih kecil", 250, 5065);
+
+  text(
+    "2. Random Walk secara khusus pada kasus kali ini cenderung bergerak ke kanan, dan juga rata-",
+    225,
+    5090
+  );
+  text(
+    "rata jarak tempuhnya lebih besar dibandingkan dengan random walk secara umum",
+    250,
+    5115
+  );
+
+  //Paragraf
+  text(
+    "Perbedaan antara keduanya diakibatkan oleh perbedaan peluang arah geraknya. Pada Random",
+    250,
+    5165
+  );
+  text(
+    "walk secara umum, peluang arah gerak ke setiap arah Utara, Selatan, Timur, dan Barat sama",
+    225,
+    5190
+  );
+  text(
+    "besarnya. Sedangkan secara khusus pada kasus kali ini memiliki peluang yang berbeda tiap",
+    225,
+    5215
+  );
+  text(
+    "arahnya, dimana peluang bergerak ke Barat (kanan) paling besar",
+    225,
+    5240
+  );
+}
+
+function DaPus() {
+  textSize(25);
+  textStyle(BOLD);
+  textAlign(CENTER);
+  text("Daftar Pustaka ", width / 2, 5315);
+  textAlign(LEFT);
+  textStyle(NORMAL);
+
+  textSize(20);
+  text(
+    "Angela B. Shiflet and George W. Shiflet. 2014. Introduction to Computational Science: Modeling and",
+    225,
+    5355
+  );
+  text(
+    "Simulation for the Sciences (Second Edition) (2nd. ed.). Princeton University Press, USA.",
+    300,
+    5380
+  );
+  text(
+    "Britannica, The Editors of Encyclopaedia. 'Markov process'. Encyclopedia Britannica, 7 Apr. 2023,",
+    225,
+    5405
+  );
+  text(
+    " https://www.britannica.com/science/Markov-process. Accessed 18 May 2023",
+    300,
+    5430
+  );
+}
+
+function PL() {
+  noLoop();
+}
+
+function CL() {
+  loop();
 }
